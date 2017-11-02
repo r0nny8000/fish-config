@@ -1,4 +1,4 @@
-echo -n init global config... 
+echo -n "init global config... "
 
 set fish_color_autosuggestion BD93F9
 set fish_color_cancel \x2dr
