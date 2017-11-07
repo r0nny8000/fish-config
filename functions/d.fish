@@ -1,6 +1,6 @@
 function d
-	echo -e "\n"
+	echo ""
 	docker ps -a $argv
-	echo -e "\n"
+	echo ""
 	docker images
 end
