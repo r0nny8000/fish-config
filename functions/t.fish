@@ -1,3 +1,4 @@
 function t
-	tree $argv
+  echo ""
+  tree $argv
 end

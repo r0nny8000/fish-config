@@ -1,3 +1,4 @@
 function l
-	ls -oa $argv
+  echo ""
+  ls -oa $argv
 end

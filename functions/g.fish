@@ -1,3 +1,4 @@
 function g
-	git status $argv
+  echo ""
+  git status $argv
 end
