@@ -1,9 +1,10 @@
 function gitbot
     for PROJECT in (find . -name '.git' -type d | sed 's/\/.git//' | sort)
-        printf "\n\033[0;35m $PROJECT \033[0m\n"
         cd $PROJECT
-        git $argv
+        set PROJECTNAME (echo $PROJECT | sed 's/\.\///')
+		set PREFIX (printf "\033[0;35m%-32s\033[0m" $PROJECTNAME)
+        git $argv | sed "s/^/$PREFIX/"
         cd ..
-        printf "\n\n\n"
+        printf "\n\n"
     end
 end
