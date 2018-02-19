@@ -30,7 +30,7 @@ set fish_key_bindings fish_default_key_bindings
 
 set fish_greeting 'Welcome'
 
-set -U EDITOR vim
+set -x EDITOR vim
 
 echo done.
 source ~/.config/fish/config.local.fish
