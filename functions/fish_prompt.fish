@@ -34,7 +34,7 @@ function fish_prompt --description 'Write out the prompt'
         set_color red
     end
 
-    echo -n (prompt_hostname)
+    echo -n (hostname -s)
     set_color normal
 
     echo -n '  '
