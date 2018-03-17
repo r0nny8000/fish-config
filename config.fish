@@ -1,4 +1,3 @@
-echo -n "init global config... "
 
 set fish_color_autosuggestion BD93F9
 set fish_color_cancel \x2dr
@@ -28,9 +27,8 @@ set fish_pager_color_progress brwhite\x1e\x2d\x2dbackground\x3dcyan
 
 set fish_key_bindings fish_default_key_bindings
 
-set fish_greeting 'Welcome'
+set --erase fish_greeting
 
 set -x EDITOR vim
 
-echo done.
 source ~/.config/fish/config.local.fish
