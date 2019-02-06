@@ -32,4 +32,6 @@ Temporary Items
 # End of https://www.gitignore.io/api/macos
 
 config.local.fish
+fish_variables
 fishd.*
+
