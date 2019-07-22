@@ -33,3 +33,4 @@ Temporary Items
 
 config.local.fish
 fishd.*
+fish_variables
