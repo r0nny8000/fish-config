@@ -1,9 +1,22 @@
 function gc
-  echo "git status, add, commit and push"
+  echo "git status"
   echo ""
-  git status 
+  git status   
+
+  echo "git add"
+  echo ""
   git add .
+
+  echo "git commit"
+  echo ""
   git commit -a
+  
+  echo "git push"
+  echo ""
   git push
+  
+
+  echo "git status"
+  echo ""
   git status
 end
