@@ -1,4 +1,4 @@
-function gitbot
+function gr
     for PROJECT in (find . -name '.git' -type d | sed 's/\/.git//' | sort)
         cd $PROJECT
         set PROJECTNAME (echo $PROJECT | sed 's/\.\///')
