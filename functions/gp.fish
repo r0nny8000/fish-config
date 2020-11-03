@@ -11,7 +11,7 @@ function gp
   echo ""
   echo "git commit -a"
   echo ""
-  git commit -a
+  git commit -a 
   
   echo ""
   echo "git push"
