@@ -1,4 +1,4 @@
 function n
 	echo ""
-	nerdctl ps --all $argv
+	nerdctl $argv
 end
