@@ -18,3 +18,12 @@ echo ' done.'
 ls -la
 
 cd $pwd
+
+echo "please execute follwing commands with sudo"
+echo "fish is installed here: "
+
+which fish
+
+echo "echo /opt/homebrew/bin/fish | sudo tee -a /etc/shells"
+echo "chsh -s /opt/homebrew/bin/fish"
+
