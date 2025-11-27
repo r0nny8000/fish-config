@@ -12,12 +12,12 @@ cd .config
 
 mv fish fish.legacy
 
-ln -s $pwd fish
+ln -s "$pwd" fish
 
 echo ' done.'
 ls -la
 
-cd $pwd
+cd "$pwd"
 
 echo "please execute follwing commands with sudo"
 echo "fish is installed here: "
