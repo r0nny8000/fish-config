@@ -1,3 +1,1 @@
 # my fish-config
-
-:-)
