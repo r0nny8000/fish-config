@@ -10,7 +10,7 @@ config.local.fish    # Machine-local config (gitignored) - secrets, PATH, toolch
 install.sh           # Symlinks this repo to ~/.config/fish, prints post-install steps
 functions/           # Fish function files (auto-loaded by fish)
 completions/         # Fish completions (currently empty)
-conf.d/              # Auto-loaded conf snippets (theme + key binding migration from fish 4.3)
+conf.d/              # Auto-loaded conf snippets (currently empty)
 fish_variables       # Fish universal variables (gitignored)
 ```
 
@@ -18,7 +18,7 @@ fish_variables       # Fish universal variables (gitignored)
 
 - **Secrets live in `config.local.fish`** (gitignored). Never commit tokens or credentials.
 - **Short alias functions** in `functions/`: most are single-letter wrappers that print a blank line before output for readability.
-- **Color theme**: Dracula-based (defined in both `config.fish` and `conf.d/fish_frozen_theme.fish`).
+- **Color theme**: Dracula-based (defined in `config.fish`).
 
 ## Local Environment (config.local.fish)
 
