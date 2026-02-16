@@ -19,7 +19,7 @@ ls -la
 
 cd "$pwd"
 
-echo "please execute follwing commands with sudo"
+echo "please execute following commands with sudo"
 echo "fish is installed here: "
 
 which fish

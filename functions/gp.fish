@@ -1,22 +1,22 @@
 function gp
   echo "git status"
   echo ""
-  git status   
+  git status; or return $status
 
   echo ""
   echo "git add ."
   echo ""
-  git add .
+  git add .; or return $status
 
   echo ""
-  echo "git commit -a"
+  echo "git commit"
   echo ""
-  git commit -a
-  
+  git commit; or return $status
+
   echo ""
   echo "git push"
   echo ""
-  git push
+  git push; or return $status
 
   echo ""
   echo "git status"
