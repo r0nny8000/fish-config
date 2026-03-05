@@ -34,3 +34,4 @@ Temporary Items
 config.local.fish
 fish_variables
 fishd.*
+.claude/
