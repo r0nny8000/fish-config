@@ -36,3 +36,6 @@ set --erase fish_greeting
 set -x EDITOR vim
 
 source ~/.config/fish/config.local.fish
+
+# Homebrew: always upgrade auto_updates casks
+set -x HOMEBREW_UPGRADE_GREEDY 1
