@@ -1,41 +1,30 @@
 
-# Dracula color theme
-set fish_color_autosuggestion BD93F9
-set fish_color_cancel -r
-set fish_color_command F8F8F2
-set fish_color_comment 6272A4
-set fish_color_cwd green
-set fish_color_cwd_root red
-set fish_color_end 50FA7B
-set fish_color_error FFB86C
-set fish_color_escape bryellow --bold
-set fish_color_history_current --bold
-set fish_color_host normal
-set fish_color_host_remote yellow
-set fish_color_match --background=brblue
-set fish_color_normal normal
-set fish_color_operator bryellow
-set fish_color_param FF79C6
-set fish_color_quote F1FA8C
-set fish_color_redirection 8BE9FD
-set fish_color_search_match bryellow --background=brblack
-set fish_color_selection white --bold --background=brblack
-set fish_color_status red
-set fish_color_user brgreen
-set fish_color_valid_path --underline
-set fish_pager_color_completion
-set fish_pager_color_description B3A06D yellow
-set fish_pager_color_prefix white --bold --underline
-set fish_pager_color_progress brwhite --background=cyan
-set fish_pager_color_selected_background -r
+# TokyoNight Night color theme
+# Source: https://github.com/vitallium/tokyonight-fish
+set fish_color_normal c0caf5
+set fish_color_command 7dcfff
+set fish_color_keyword bb9af7
+set fish_color_quote e0af68
+set fish_color_redirection c0caf5
+set fish_color_end ff9e64
+set fish_color_option bb9af7
+set fish_color_error f7768e
+set fish_color_param 9d7cd8
+set fish_color_comment 565f89
+set fish_color_selection --background=283457
+set fish_color_search_match --background=283457
+set fish_color_operator 9ece6a
+set fish_color_escape bb9af7
+set fish_color_autosuggestion 565f89
+set fish_pager_color_progress 565f89
+set fish_pager_color_prefix 7dcfff
+set fish_pager_color_completion c0caf5
+set fish_pager_color_description 565f89
+set fish_pager_color_selected_background --background=283457
 
 set fish_key_bindings fish_default_key_bindings
 
 set --erase fish_greeting
 
-set -x EDITOR vim
 
 source ~/.config/fish/config.local.fish
-
-# Homebrew: always upgrade auto_updates casks
-set -x HOMEBREW_UPGRADE_GREEDY 1
