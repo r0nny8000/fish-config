@@ -10,7 +10,7 @@ function cc
         echo "Wraps claude with caffeinate to prevent sleep during sessions."
         echo ""
         echo "Options:"
-        echo "  -a, --auto            Enable auto mode (passes --enable-auto-mode to claude)"
+        echo "  -a, --auto            Enable auto permission mode (passes --permission-mode auto)"
         echo "  -r, --resume [ID]     Resume a session (interactive picker, or by session ID)"
         echo "  -C, --no-caffeinate   Don't prevent system sleep (skips caffeinate wrapper)"
         echo "  -h, --help            Show this help message and exit"
@@ -19,7 +19,7 @@ function cc
 
     set -l claude_args $argv
     if set -q _flag_a
-        set -p claude_args --enable-auto-mode
+        set -p claude_args --permission-mode auto
     end
     if set -q _flag_resume
         if test -n "$_flag_resume"
