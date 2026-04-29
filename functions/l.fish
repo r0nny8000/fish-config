@@ -1,4 +1,4 @@
 function l
   echo ""
-  lsd -la $argv
+  lsd $argv
 end
