@@ -1,4 +1,4 @@
-function c
+function ca
   echo ""
   for file in $argv
     switch (string lower -- $file)
