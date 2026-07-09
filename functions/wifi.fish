@@ -1,5 +1,5 @@
 function wifi
-    argparse 'h/help' -- $argv
+    argparse --ignore-unknown 'h/help' -- $argv
     or return
 
     if set -q _flag_h
