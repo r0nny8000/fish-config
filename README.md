@@ -4,7 +4,7 @@
 
 | Function | Command | Description |
 |----------|---------|-------------|
-| `c`      | `ccat`  | Colorized cat |
+| `o`      | `ccat` / `glow` / `open` | Smart file opener: text/markdown in terminal, others via macOS open |
 | `g`      | `git status` | Git status shortcut |
 | `gl`     | `git log --graph ...` | Pretty git log with graph |
 | `gr`     | recursive git | Run a git command across all repos in subdirectories |
