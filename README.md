@@ -4,7 +4,7 @@
 
 | Function | Command | Description |
 |----------|---------|-------------|
-| `cc`     | `claude` (wrapped in `caffeinate`) | Claude CLI, keeps the machine awake during sessions |
+| `cc`     | `claude` (wrapped in `caffeinate` / `systemd-inhibit`) | Claude CLI, keeps the machine awake during sessions |
 | `cpu`    | `mactop` / `btop` / `htop` | System monitor; `--temp` prints temperature, frequency and throttling |
 | `fixql`  | `xattr`, `qlmanage` | Clear the quarantine flag on QLMarkdown.app (macOS only) |
 | `g`      | `git status` | Git status shortcut |
@@ -14,7 +14,7 @@
 | `l`      | `lsd` | List files with lsd |
 | `ll`     | `lsd -la` | Long listing with lsd |
 | `n`      | `nerdctl` | Container runtime shortcut |
-| `o`      | `ccat` / `glow` / `open` | Smart file opener: text in terminal, others via `open` (macOS only) |
+| `o`      | `ccat` / `bat` / `glow` / `open` / `xdg-open` | Smart file opener: text and markdown in the terminal, everything else in the desktop default app |
 | `sha256sum` | `gsha256sum` / `sha256sum` / `shasum` | SHA-256, whichever implementation is present |
 | `t`      | `tree` | Tree shortcut |
 | `v`      | `nvim` | Neovim shortcut |
@@ -33,7 +33,7 @@ the function that uses it stops working. Install what you actually use.
 | `tree` | `t` | `brew install tree` | `sudo apt install tree` |
 | `lsd` | `l`, `ll` | `brew install lsd` | `sudo apt install lsd` |
 | `glow` | `o` | `brew install glow` | `sudo apt install glow` |
-| `ccat` | `o` | `brew install ccat` | not packaged — see below |
+| `ccat` | `o` | `brew install ccat` | `sudo apt install bat` — used automatically |
 | `nerdctl` | `n` | `brew install nerdctl` | see below |
 | coreutils | `sha256sum` | `brew install coreutils` | built in |
 | `btop` | `cpu` | — (uses `mactop`) | `sudo apt install btop` |
@@ -41,8 +41,8 @@ the function that uses it stops working. Install what you actually use.
 | `vcgencmd` | `cpu --temp` | — | `sudo apt install raspi-utils-core` |
 | `bandwhich` | `wifi` | `brew install bandwhich` | see below |
 | `claude` | `cc` | https://claude.com/claude-code | https://claude.com/claude-code |
-| `caffeinate` | `cc` | built in | not available — use `cc -C` |
-| `open` | `o` | built in | not available (`xdg-open` is the equivalent, not yet wired up) |
+| `caffeinate` | `cc` | built in | `systemd-inhibit`, part of systemd |
+| `open` | `o` | built in | `xdg-open`, preinstalled |
 | `file` | `o` | built in | preinstalled |
 
 ### Tools not in the Debian repositories
@@ -58,9 +58,9 @@ Swap `aarch64` for `x86_64` on Intel/AMD machines, and bump the version as new
 releases appear. `nerdctl` is distributed the same way, from
 https://github.com/containerd/nerdctl/releases.
 
-`ccat` has no Debian package. The closest replacement is `bat`
-(`sudo apt install bat`), whose binary is called `batcat` on Debian to avoid a
-name clash.
+`ccat` has no Debian package. `o` falls back to `bat` (`sudo apt install bat`,
+installed as `batcat` on Debian to avoid a name clash) and then to plain `cat`,
+so it works either way.
 
 ### Raspberry Pi: throttling in `cpu --temp`
 
@@ -78,4 +78,4 @@ about this step.
 ### macOS-only functions
 
 `fixql` targets `/Applications/QLMarkdown.app` and uses `xattr` and `qlmanage`.
-`o` shells out to `open` for anything that is not a text or markdown file.
+It is the only function with no Linux equivalent.
