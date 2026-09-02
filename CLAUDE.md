@@ -27,13 +27,23 @@ Managed per-machine, sets up: locale, Homebrew, pyenv, Java/Maven/Groovy, compil
 ## Installation
 
 ```sh
-./install.sh
+./install.sh                # prompts before installing missing tools
+./install.sh --yes          # install without prompting
+./install.sh --skip-tools   # symlink only
 ```
 
-`install.sh` is idempotent: it backs up an existing `~/.config/fish` before
-symlinking, respects `XDG_CONFIG_HOME`, and prints the remaining manual steps
-(adding fish to `/etc/shells` and `chsh`) with the fish path detected on that
-machine, skipping whichever step is already done.
+`install.sh` is idempotent and re-running it completes whatever is missing
+rather than redoing work: it backs up an existing `~/.config/fish` before
+symlinking, respects `XDG_CONFIG_HOME`, installs only the dependencies that
+are not already present, and prints the remaining manual steps (adding fish
+to `/etc/shells` and `chsh`) with the fish path detected on that machine,
+skipping whichever step is already done.
+
+The dependency list lives in the `TOOLS` table inside `install.sh`, one row
+per tool: the command to probe for (alternatives separated by `|`), the
+Homebrew formula, the apt package, and a URL for tools neither manager
+supplies. Add a row there when a function gains a dependency, and keep the
+README table in sync.
 
 ## Dependencies
 

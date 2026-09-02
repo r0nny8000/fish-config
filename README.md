@@ -22,8 +22,10 @@
 
 ## Dependencies
 
-The functions call external tools. Nothing breaks if a tool is missing — only
-the function that uses it stops working. Install what you actually use.
+`./install.sh` installs everything in this table that Homebrew or apt can
+supply, skipping whatever is already present, and reports the rest as manual
+steps. Nothing breaks if a tool is missing — only the function that uses it
+stops working.
 
 | Tool | Used by | macOS | Linux (Debian / Raspberry Pi OS) |
 |------|---------|-------|----------------------------------|
@@ -44,10 +46,12 @@ the function that uses it stops working. Install what you actually use.
 | `caffeinate` | `cc` | built in | `systemd-inhibit`, part of systemd |
 | `open` | `o` | built in | `xdg-open`, preinstalled |
 | `file` | `o` | built in | preinstalled |
+| `hostname` | `fish_prompt` | built in | `sudo apt install hostname` |
 
 ### Tools not in the Debian repositories
 
-`bandwhich` publishes prebuilt Linux binaries:
+`install.sh` reports these rather than installing them. `bandwhich` publishes
+prebuilt Linux binaries:
 
 ```sh
 curl -sL https://github.com/imsnif/bandwhich/releases/download/v0.23.1/bandwhich-v0.23.1-aarch64-unknown-linux-gnu.tar.gz \
