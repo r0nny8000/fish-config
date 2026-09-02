@@ -28,11 +28,20 @@ Managed per-machine, sets up: locale, Homebrew, pyenv, Java/Maven/Groovy, compil
 
 ```sh
 ./install.sh
-# Then manually:
-echo /opt/homebrew/bin/fish | sudo tee -a /etc/shells
-chsh -s /opt/homebrew/bin/fish
 ```
+
+`install.sh` is idempotent: it backs up an existing `~/.config/fish` before
+symlinking, respects `XDG_CONFIG_HOME`, and prints the remaining manual steps
+(adding fish to `/etc/shells` and `chsh`) with the fish path detected on that
+machine, skipping whichever step is already done.
 
 ## Dependencies
 
-External tools used by functions: `ccat`, `lsd`, `tree`, `nerdctl`, `gsha256sum` (coreutils), `pyenv`, Homebrew.
+See the Dependencies table in `README.md` for the full list of external tools
+the functions call, with the install command for macOS and for Debian /
+Raspberry Pi OS. Keep that table in sync when a function gains or drops a tool.
+
+Functions are expected to work on both macOS and Linux, since this repo is
+symlinked on both. Detect the tool or interface at runtime rather than
+hardcoding a platform-specific name, and degrade with a useful message when
+nothing suitable is installed.

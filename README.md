@@ -4,13 +4,78 @@
 
 | Function | Command | Description |
 |----------|---------|-------------|
-| `o`      | `ccat` / `glow` / `open` | Smart file opener: text/markdown in terminal, others via macOS open |
+| `cc`     | `claude` (wrapped in `caffeinate`) | Claude CLI, keeps the machine awake during sessions |
+| `cpu`    | `mactop` / `btop` / `htop` | System monitor; `--temp` prints temperature, frequency and throttling |
+| `fixql`  | `xattr`, `qlmanage` | Clear the quarantine flag on QLMarkdown.app (macOS only) |
 | `g`      | `git status` | Git status shortcut |
 | `gl`     | `git log --graph ...` | Pretty git log with graph |
 | `gr`     | recursive git | Run a git command across all repos in subdirectories |
 | `json`   | `python -m json.tool` | Format JSON |
-| `l`      | `lsd -la` | List files with lsd |
+| `l`      | `lsd` | List files with lsd |
+| `ll`     | `lsd -la` | Long listing with lsd |
 | `n`      | `nerdctl` | Container runtime shortcut |
-| `sha256sum` | `gsha256sum` | macOS sha256 via coreutils |
+| `o`      | `ccat` / `glow` / `open` | Smart file opener: text in terminal, others via `open` (macOS only) |
+| `sha256sum` | `gsha256sum` / `sha256sum` / `shasum` | SHA-256, whichever implementation is present |
 | `t`      | `tree` | Tree shortcut |
-| `v`      | `vim` | Vim shortcut |
+| `v`      | `nvim` | Neovim shortcut |
+| `wifi`   | `bandwhich` | Per-process Wi-Fi bandwidth |
+
+## Dependencies
+
+The functions call external tools. Nothing breaks if a tool is missing — only
+the function that uses it stops working. Install what you actually use.
+
+| Tool | Used by | macOS | Linux (Debian / Raspberry Pi OS) |
+|------|---------|-------|----------------------------------|
+| `git` | `g`, `gl`, `gr` | preinstalled | `sudo apt install git` |
+| `python` | `json` | preinstalled | `sudo apt install python-is-python3` |
+| `nvim` | `v` | `brew install neovim` | `sudo apt install neovim` |
+| `tree` | `t` | `brew install tree` | `sudo apt install tree` |
+| `lsd` | `l`, `ll` | `brew install lsd` | `sudo apt install lsd` |
+| `glow` | `o` | `brew install glow` | `sudo apt install glow` |
+| `ccat` | `o` | `brew install ccat` | not packaged — see below |
+| `nerdctl` | `n` | `brew install nerdctl` | see below |
+| coreutils | `sha256sum` | `brew install coreutils` | built in |
+| `btop` | `cpu` | — (uses `mactop`) | `sudo apt install btop` |
+| `mactop` | `cpu` | `brew install mactop` | — (Apple Silicon only) |
+| `vcgencmd` | `cpu --temp` | — | `sudo apt install raspi-utils-core` |
+| `bandwhich` | `wifi` | `brew install bandwhich` | see below |
+| `claude` | `cc` | https://claude.com/claude-code | https://claude.com/claude-code |
+| `caffeinate` | `cc` | built in | not available — use `cc -C` |
+| `open` | `o` | built in | not available (`xdg-open` is the equivalent, not yet wired up) |
+| `file` | `o` | built in | preinstalled |
+
+### Tools not in the Debian repositories
+
+`bandwhich` publishes prebuilt Linux binaries:
+
+```sh
+curl -sL https://github.com/imsnif/bandwhich/releases/download/v0.23.1/bandwhich-v0.23.1-aarch64-unknown-linux-gnu.tar.gz \
+  | sudo tar -xz -C /usr/local/bin bandwhich
+```
+
+Swap `aarch64` for `x86_64` on Intel/AMD machines, and bump the version as new
+releases appear. `nerdctl` is distributed the same way, from
+https://github.com/containerd/nerdctl/releases.
+
+`ccat` has no Debian package. The closest replacement is `bat`
+(`sudo apt install bat`), whose binary is called `batcat` on Debian to avoid a
+name clash.
+
+### Raspberry Pi: throttling in `cpu --temp`
+
+Temperature and frequency are read from sysfs and need no privileges.
+Throttling and under-voltage state come from the VideoCore firmware via
+`vcgencmd`, which requires membership in the `video` group:
+
+```sh
+sudo usermod -aG video $USER   # then log out and back in
+```
+
+Without it, `cpu --temp` still prints temperature and frequency and tells you
+about this step.
+
+### macOS-only functions
+
+`fixql` targets `/Applications/QLMarkdown.app` and uses `xattr` and `qlmanage`.
+`o` shells out to `open` for anything that is not a text or markdown file.
