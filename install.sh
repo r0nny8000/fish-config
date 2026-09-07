@@ -75,8 +75,8 @@ fi
 # separated by "|" mean any one of them satisfies the dependency. A "-" means
 # that package manager cannot supply the tool, in which case the manual URL is
 # reported instead. Tools that are part of the base system on both platforms
-# (awk, sed, grep, find, sort, cat, file utilities, caffeinate, systemd-inhibit,
-# xdg-open, open, xattr, qlmanage) are deliberately absent.
+# (awk, sed, grep, find, sort, cat, caffeinate, systemd-inhibit, xattr,
+# qlmanage) are deliberately absent.
 
 TOOLS='
 git                     git         git                 -
@@ -84,12 +84,11 @@ nvim                    neovim      neovim              -
 tree                    tree        tree                -
 lsd                     lsd         lsd                 -
 glow                    glow        glow                -
-file                    -           file                -
 hostname                -           hostname            -
 python                  -           python-is-python3   https://github.com/pyenv/pyenv
 mactop|btop             mactop      btop                -
 gsha256sum|sha256sum    coreutils   -                   -
-ccat|batcat|bat         ccat        bat                 -
+bat|batcat              bat         bat                 -
 nerdctl                 nerdctl     -                   https://github.com/containerd/nerdctl/releases
 bandwhich               bandwhich   -                   https://github.com/imsnif/bandwhich/releases
 vcgencmd                -           raspi-utils-core    -
