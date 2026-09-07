@@ -1,9 +1,62 @@
 # my fish-config
 
+Personal fish shell configuration, deployed by symlinking this repo to
+`~/.config/fish`. It sets a Dracula colour theme, the default key bindings and
+`EDITOR=vim`, and adds a set of short alias functions.
+
+## Installation
+
+```sh
+./install.sh                # prompts before installing missing tools
+./install.sh --yes          # install without prompting
+./install.sh --skip-tools   # symlink only
+```
+
+`install.sh` is idempotent: re-running it completes whatever is missing rather
+than redoing work. It backs up an existing `~/.config/fish` before symlinking,
+respects `XDG_CONFIG_HOME`, installs only the dependencies that are not already
+present, and prints the remaining manual steps — adding fish to `/etc/shells`
+and `chsh` — with the fish path detected on that machine, skipping whichever
+step is already done.
+
+The dependency list lives in the `TOOLS` table inside `install.sh`, one row per
+tool: the command to probe for (alternatives separated by `|`), the Homebrew
+formula, the apt package, and a URL for tools neither manager supplies.
+
+## Project Structure
+
+```
+config.fish          # Main config: Dracula color theme, default key bindings, EDITOR=vim
+config.local.fish    # Machine-local config (gitignored) - secrets, PATH, toolchain setup
+install.sh           # Symlinks this repo to ~/.config/fish, prints post-install steps
+functions/           # Fish function files (auto-loaded by fish)
+completions/         # Fish completions (currently empty)
+conf.d/              # Auto-loaded conf snippets (currently empty)
+fish_variables       # Fish universal variables (gitignored)
+```
+
+## Conventions
+
+- **Secrets live in `config.local.fish`**, which is gitignored. No tokens or
+  credentials are committed.
+- **Short alias functions** in `functions/`: most are single-letter wrappers
+  that print a blank line before their output for readability.
+- **Cross-platform**: the repo is symlinked on both macOS and Linux, so
+  functions detect the tool or interface they need at runtime instead of
+  hardcoding a platform-specific name, and print a useful message when nothing
+  suitable is installed.
+
+## Local Environment (config.local.fish)
+
+Machine-local and not tracked in git. It sets up locale, Homebrew, pyenv,
+Java/Maven/Groovy, compiler flags (`LDFLAGS`/`CFLAGS`/`CPPFLAGS`), and tokens
+for GitHub/JFrog/Jira.
+
 ## Function Aliases
 
 | Function | Command | Description |
 |----------|---------|-------------|
+| `c`      | `bat` / `batcat` / `glow` | Show files in the terminal: markdown through `glow`, everything else through `bat` |
 | `cc`     | `claude` (wrapped in `caffeinate` / `systemd-inhibit`) | Claude CLI, keeps the machine awake during sessions |
 | `cpu`    | `mactop` / `btop` / `htop` | System monitor; `--temp` prints temperature, frequency and throttling |
 | `fixql`  | `xattr`, `qlmanage` | Clear the quarantine flag on QLMarkdown.app (macOS only) |
@@ -14,7 +67,6 @@
 | `l`      | `lsd` | List files with lsd |
 | `ll`     | `lsd -la` | Long listing with lsd |
 | `n`      | `nerdctl` | Container runtime shortcut |
-| `o`      | `ccat` / `bat` / `glow` / `open` / `xdg-open` | Smart file opener: text and markdown in the terminal, everything else in the desktop default app |
 | `sha256sum` | `gsha256sum` / `sha256sum` / `shasum` | SHA-256, whichever implementation is present |
 | `t`      | `tree` | Tree shortcut |
 | `v`      | `nvim` | Neovim shortcut |
@@ -34,8 +86,8 @@ stops working.
 | `nvim` | `v` | `brew install neovim` | `sudo apt install neovim` |
 | `tree` | `t` | `brew install tree` | `sudo apt install tree` |
 | `lsd` | `l`, `ll` | `brew install lsd` | `sudo apt install lsd` |
-| `glow` | `o` | `brew install glow` | `sudo apt install glow` |
-| `ccat` | `o` | `brew install ccat` | `sudo apt install bat` — used automatically |
+| `glow` | `c` | `brew install glow` | `sudo apt install glow` |
+| `bat` | `c` | `brew install bat` | `sudo apt install bat` — installed as `batcat` |
 | `nerdctl` | `n` | `brew install nerdctl` | see below |
 | coreutils | `sha256sum` | `brew install coreutils` | built in |
 | `btop` | `cpu` | — (uses `mactop`) | `sudo apt install btop` |
@@ -44,8 +96,6 @@ stops working.
 | `bandwhich` | `wifi` | `brew install bandwhich` | see below |
 | `claude` | `cc` | https://claude.com/claude-code | https://claude.com/claude-code |
 | `caffeinate` | `cc` | built in | `systemd-inhibit`, part of systemd |
-| `open` | `o` | built in | `xdg-open`, preinstalled |
-| `file` | `o` | built in | preinstalled |
 | `hostname` | `fish_prompt` | built in | `sudo apt install hostname` |
 
 ### Tools not in the Debian repositories
@@ -62,9 +112,9 @@ Swap `aarch64` for `x86_64` on Intel/AMD machines, and bump the version as new
 releases appear. `nerdctl` is distributed the same way, from
 https://github.com/containerd/nerdctl/releases.
 
-`ccat` has no Debian package. `o` falls back to `bat` (`sudo apt install bat`,
-installed as `batcat` on Debian to avoid a name clash) and then to plain `cat`,
-so it works either way.
+Debian installs `bat` as `batcat` to avoid a name clash with another package,
+so `c` looks for `bat` and then `batcat`, and falls back to plain `cat` when
+neither is present.
 
 ### Raspberry Pi: throttling in `cpu --temp`
 

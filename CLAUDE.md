@@ -1,57 +1,29 @@
-# Fish Shell Configuration
+# Instructions for Claude
 
-Personal fish shell configuration, deployed via symlink to `~/.config/fish`.
+`README.md` is the project documentation: layout, installation, conventions,
+the function list and the dependency table. Read it for context before working
+here, and keep it current — this file holds only working instructions, no
+project description.
 
-## Project Structure
+## Writing functions
 
-```
-config.fish          # Main config: Dracula color theme, default key bindings, EDITOR=vim
-config.local.fish    # Machine-local config (gitignored) - secrets, PATH, toolchain setup
-install.sh           # Symlinks this repo to ~/.config/fish, prints post-install steps
-functions/           # Fish function files (auto-loaded by fish)
-completions/         # Fish completions (currently empty)
-conf.d/              # Auto-loaded conf snippets (currently empty)
-fish_variables       # Fish universal variables (gitignored)
-```
+- Functions must work on both macOS and Linux, since this repo is symlinked on
+  both. Detect the tool or interface at runtime rather than hardcoding a
+  platform-specific name, and degrade with a useful message when nothing
+  suitable is installed.
+- Follow the style of the existing functions in `functions/`: short wrappers
+  that print a blank line before their output.
 
-## Key Conventions
+## Keeping things in sync
 
-- **Secrets live in `config.local.fish`** (gitignored). Never commit tokens or credentials.
-- **Short alias functions** in `functions/`: most are single-letter wrappers that print a blank line before output for readability.
-- **Color theme**: Dracula-based (defined in `config.fish`).
+- When a function gains or drops an external tool, update both the `TOOLS`
+  table in `install.sh` and the Dependencies table in `README.md`.
+- When a function is added, removed or renamed, update the Function Aliases
+  table in `README.md`.
+- Keep `install.sh` idempotent: re-running it must complete what is missing
+  without redoing work that is already done.
 
-## Local Environment (config.local.fish)
+## Secrets
 
-Managed per-machine, sets up: locale, Homebrew, pyenv, Java/Maven/Groovy, compiler flags (LDFLAGS/CFLAGS/CPPFLAGS), and tokens for GitHub/JFrog/Jira. Not tracked in git.
-
-## Installation
-
-```sh
-./install.sh                # prompts before installing missing tools
-./install.sh --yes          # install without prompting
-./install.sh --skip-tools   # symlink only
-```
-
-`install.sh` is idempotent and re-running it completes whatever is missing
-rather than redoing work: it backs up an existing `~/.config/fish` before
-symlinking, respects `XDG_CONFIG_HOME`, installs only the dependencies that
-are not already present, and prints the remaining manual steps (adding fish
-to `/etc/shells` and `chsh`) with the fish path detected on that machine,
-skipping whichever step is already done.
-
-The dependency list lives in the `TOOLS` table inside `install.sh`, one row
-per tool: the command to probe for (alternatives separated by `|`), the
-Homebrew formula, the apt package, and a URL for tools neither manager
-supplies. Add a row there when a function gains a dependency, and keep the
-README table in sync.
-
-## Dependencies
-
-See the Dependencies table in `README.md` for the full list of external tools
-the functions call, with the install command for macOS and for Debian /
-Raspberry Pi OS. Keep that table in sync when a function gains or drops a tool.
-
-Functions are expected to work on both macOS and Linux, since this repo is
-symlinked on both. Detect the tool or interface at runtime rather than
-hardcoding a platform-specific name, and degrade with a useful message when
-nothing suitable is installed.
+Never commit tokens or credentials. Machine-local settings and secrets belong
+in `config.local.fish`, which is gitignored.
