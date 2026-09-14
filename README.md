@@ -25,20 +25,23 @@ Options:
 
 ```sh
 ./install.sh                # prompts before installing missing tools
-./install.sh --yes          # install without prompting
+./install.sh --yes          # install and set the login shell without prompting
 ./install.sh --skip-tools   # symlink only
 ```
 
 `install.sh` is idempotent: re-running it completes whatever is missing rather
 than redoing work. It backs up an existing `~/.config/fish` before symlinking,
 respects `XDG_CONFIG_HOME`, installs fish and whichever dependencies are not
-already present, and prints the remaining manual steps — adding fish to `/etc/shells`
-and `chsh` — with the fish path detected on that machine, skipping whichever
-step is already done.
+already present, and makes fish your login shell, adding it to `/etc/shells`
+first. It asks before installing or changing anything unless `--yes` is given;
+with `--skip-tools` it prints the login-shell commands instead of running them.
 
 The dependency list lives in the `TOOLS` table inside `install.sh`, one row per
 tool: the command to probe for (alternatives separated by `|`), the Homebrew
-formula, the apt package, and a URL for tools neither manager supplies.
+formula, the apt package, and for tools neither manager supplies either a Linux
+release archive (a `.tar.gz` URL, `{arch}` standing for `uname -m`) that
+`install.sh` downloads into `/usr/local/bin`, or a URL it reports for a manual
+install.
 
 ## Testing
 
@@ -50,8 +53,9 @@ tests/install-test.sh ubuntu:24.04    # any apt-based image
 Runs `install.sh` for real inside a fresh container, as a normal user with
 sudo, and checks the result: the symlink and the backup of an existing config,
 `config.local.fish`, that every tool from the `TOOLS` table with an apt package
-— fish included — is on `PATH` afterwards, that fish starts cleanly, that each
-function runs with its real tool, and that a second run changes nothing. Each
+or a release download — fish included — is on `PATH` afterwards, that fish is
+the login shell and starts cleanly, that each function runs with its real tool,
+and that a second run changes nothing. Each
 check prints `ok` or `FAIL`; on failure both install logs follow.
 
 Needs podman or docker (`sudo apt install podman` runs rootless). It installs the
@@ -123,6 +127,7 @@ function that uses it stops working.
 | Tool | Used by | macOS | Linux (Debian / Raspberry Pi OS) |
 |------|---------|-------|----------------------------------|
 | `fish` | the shell itself | `brew install fish` | `sudo apt install fish` |
+| `curl` | `install.sh`, for release downloads | built in | `sudo apt install curl` |
 | `git` | `g`, `gl`, `gr` | preinstalled | `sudo apt install git` |
 | `python` | `json` | preinstalled | `sudo apt install python-is-python3` |
 | `nvim` | `v` | `brew install neovim` | `sudo apt install neovim` |
@@ -130,12 +135,12 @@ function that uses it stops working.
 | `lsd` | `l`, `ll` | `brew install lsd` | `sudo apt install lsd` |
 | `glow` | `c` | `brew install glow` | `sudo apt install glow` |
 | `bat` | `c` | `brew install bat` | `sudo apt install bat` — installed as `batcat` |
-| `nerdctl` | `n` | `brew install nerdctl` | see below |
+| `nerdctl` | `n` | — (Homebrew's formula is Linux only) | see below |
 | coreutils | `sha256sum` | `brew install coreutils` | built in |
 | `btop` | `cpu` | — (uses `mactop`) | `sudo apt install btop` |
 | `mactop` | `cpu` | `brew install mactop` | — (Apple Silicon only) |
 | `vcgencmd` | `cpu --temp` | — | `sudo apt install raspi-utils-core` |
-| `bandwhich` | `wifi` | `brew install bandwhich` | see below |
+| `bandwhich` | `wifi` | `brew install bandwhich` | release download, see below |
 | `claude` | `cc` | https://claude.com/claude-code | https://claude.com/claude-code |
 | `caffeinate` | `cc` | built in | `systemd-inhibit`, part of systemd |
 | `hostname` | `fish_prompt` | built in | `sudo apt install hostname` |
@@ -145,16 +150,12 @@ table, so `install.sh` does not install it.
 
 ### Tools not in the Debian repositories
 
-`install.sh` reports these rather than installing them. `bandwhich` publishes
-prebuilt Linux binaries:
+`bandwhich` publishes prebuilt Linux binaries, so `install.sh` downloads the
+release for the machine's architecture into `/usr/local/bin`. Bump the version
+in its `TOOLS` row as new releases appear.
 
-```sh
-curl -sL https://github.com/imsnif/bandwhich/releases/download/v0.23.1/bandwhich-v0.23.1-aarch64-unknown-linux-gnu.tar.gz \
-  | sudo tar -xz -C /usr/local/bin bandwhich
-```
-
-Swap `aarch64` for `x86_64` on Intel/AMD machines, and bump the version as new
-releases appear. `nerdctl` is distributed the same way, from
+`nerdctl` is reported rather than installed: on its own the binary does
+nothing, it needs containerd running and a rootless setup. Releases are at
 https://github.com/containerd/nerdctl/releases.
 
 Debian installs `bat` as `batcat` to avoid a name clash with another package,

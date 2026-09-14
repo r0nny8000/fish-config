@@ -8,7 +8,9 @@ instructions, no project description.
 ## Where things go
 
 - New tool: a row in the `TOOLS` table in `install.sh` and in the Dependencies
-  table in `README.md`.
+  table in `README.md`. If neither apt nor Homebrew has it but it publishes a
+  Linux release archive, put the `.tar.gz` URL in the last column, with
+  `{arch}` for `uname -m`.
 - New function: `functions/<name>.fish` and a row in the Function Aliases table
   in `README.md`.
 - Tool configuration (PATH, environment variables, init lines):
@@ -38,8 +40,13 @@ instructions, no project description.
   it with its real tool.
 - The `TOOLS` table and the README tables match the change.
 
+## Git
+
+- Work on a branch. When `tests/install-test.sh` passes, fast-forward `master`
+  to it and push; if it fails, do not merge.
+
 ## Stop and ask when
 
-- A tool is not available from apt or Homebrew.
+- A tool is not available from apt, Homebrew or a Linux release archive.
 - A change would remove existing behaviour.
 - Anything needs a secret.

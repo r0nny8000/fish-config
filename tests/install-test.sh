@@ -1,9 +1,9 @@
 #!/bin/bash
 #
 # Runs install.sh for real inside a fresh container and checks the result:
-# symlink and backup, config.local.fish, every apt-installable tool from the
-# TOOLS table (fish included), each function run once with its real tool, and
-# an idempotent second run.
+# symlink and backup, config.local.fish, every tool from the TOOLS table that
+# apt or a release download provides (fish included), the login shell, each
+# function run once with its real tool, and an idempotent second run.
 #
 #   tests/install-test.sh [image]    # default: debian:13
 #
@@ -92,8 +92,14 @@ check "symlink points at the repo" test "$(readlink "$HOME/.config/fish")" = "$r
 check "existing config moved to fish.legacy" grep -qx old "$HOME/.config/fish.legacy/config.fish"
 check "config.local.fish created" test -f "$repo/config.local.fish"
 
-while read -r probe _ apt_pkg _; do
-    if [ -z "$probe" ] || [ "$apt_pkg" = - ]; then
+while read -r probe _ apt_pkg note; do
+    if [ -z "$probe" ]; then
+        continue
+    fi
+    if [ "$apt_pkg" = - ]; then
+        if [ "${note%.tar.gz}" != "$note" ]; then
+            check "$probe installed from its release download" have "$probe"
+        fi
         continue
     fi
     if ! apt-cache show "$apt_pkg" >/dev/null 2>&1; then
@@ -106,6 +112,7 @@ done < <(sed -n "/^TOOLS='/,/^'/p" "$repo/install.sh" | sed '1d;$d')
 check "no tool reported twice as skipped" \
     bash -c "grep '^Not applicable' /tmp/run1.log | cut -d: -f2 | tr ' ' '\n' | grep . | sort | uniq -d | grep -q . && exit 1 || exit 0"
 check "fish starts without errors" test -z "$(fish -c true 2>&1)"
+check "fish is the login shell" test "$(getent passwd "$USER" | cut -d: -f7)" = "$(command -v fish)"
 
 # Each function once, with the tool install.sh put there. Left out: n, whose
 # nerdctl is not installable from apt, and fixql, which is macOS only.
@@ -124,9 +131,11 @@ check "sha256sum hashes a file" outputs install.sh fish -c "sha256sum '$repo/ins
 check "t runs" fish -c 't -L 1 /'
 check "v starts neovim" outputs NVIM fish -c 'v --version'
 check "wifi --help runs" outputs "Usage: wifi" fish -c 'wifi --help'
+check "bandwhich runs" outputs bandwhich bandwhich --version
 
 check "second run exits 0" exits_with 0 bash -c "'$repo/install.sh' --yes > /tmp/run2.log 2>&1"
 check "second run keeps the symlink" grep -q "Symlink already points here" /tmp/run2.log
+check "second run keeps the login shell" grep -q "Already your login shell" /tmp/run2.log
 check "second run installs nothing" grep -q "All packaged tools are already installed" /tmp/run2.log
 check "second run makes no new backup" bash -c "! ls -d '$HOME'/.config/fish.legacy-* 2>/dev/null"
 
