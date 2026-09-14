@@ -215,8 +215,8 @@ if [ -z "$fish_path" ]; then
     exit 0
 fi
 
-# Resolve through any symlinks so /etc/shells gets the real interpreter path.
-fish_path=$(readlink -f "$fish_path" 2>/dev/null || echo "$fish_path")
+# Keep the PATH entry rather than resolving it: Homebrew's bin/fish points into
+# a versioned Cellar directory that changes with every fish upgrade.
 echo "fish is installed here: $fish_path"
 
 if [ -f /etc/shells ] && grep -qxF "$fish_path" /etc/shells; then
@@ -227,10 +227,14 @@ else
     echo "  echo $fish_path | sudo tee -a /etc/shells"
 fi
 
+# getent is Linux-only, and a missing one still leaves the pipeline exiting 0,
+# so pick the tool up front instead of chaining fallbacks.
 user=${USER:-$(id -un)}
-current_shell=$(getent passwd "$user" 2>/dev/null | cut -d: -f7 \
-    || dscl . -read "/Users/$user" UserShell 2>/dev/null | awk '{print $2}' \
-    || true)
+if command -v getent >/dev/null 2>&1; then
+    current_shell=$(getent passwd "$user" | cut -d: -f7 || true)
+else
+    current_shell=$(dscl . -read "/Users/$user" UserShell 2>/dev/null | awk '{print $2}' || true)
+fi
 
 if [ "$current_shell" = "$fish_path" ]; then
     echo "Already your login shell."
