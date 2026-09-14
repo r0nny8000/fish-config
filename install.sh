@@ -143,7 +143,6 @@ else
 
             # raspi-utils-core and friends do not exist outside Raspberry Pi OS.
             if [ "$pkg" != "-" ] && [ "$pm" = apt ] && ! apt-cache show "$pkg" >/dev/null 2>&1; then
-                unavailable="$unavailable $probe"
                 pkg="-"
             fi
 
