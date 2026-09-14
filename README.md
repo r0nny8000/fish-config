@@ -46,22 +46,31 @@ install.
 ## Testing
 
 ```sh
-tests/install-test.sh                 # debian:13
-tests/install-test.sh ubuntu:24.04    # any apt-based image
+tests/install-test.sh                     # apt and Homebrew, on debian:13
+tests/install-test.sh apt                 # one mode only: apt or brew
+tests/install-test.sh apt ubuntu:24.04    # another Debian-based image
 ```
 
 Runs `install.sh` for real inside a fresh container, as a normal user with
-sudo, and checks the result: the symlink and the backup of an existing config,
-`config.local.fish`, that every tool from the `TOOLS` table with an apt package
-or a release download — fish included — is on `PATH` afterwards, that fish is
-the login shell and starts cleanly, that each function runs with its real tool,
-and that a second run changes nothing. Each
-check prints `ok` or `FAIL`; on failure both install logs follow.
+sudo, once per package manager, and checks the result: the symlink and the
+backup of an existing config, `config.local.fish`, that every tool from the
+`TOOLS` table the package manager or a release download provides — fish
+included — is on `PATH` afterwards, that fish is in `/etc/shells`, is the login
+shell and starts cleanly, that each function runs with its real tool, and that
+a second run changes nothing. Each check prints `ok` or `FAIL`; on failure both
+install logs follow.
 
 Needs podman or docker (`sudo apt install podman` runs rootless). It installs the
-full dependency list, so a run takes several minutes and needs network access.
-Homebrew, the macOS-only `fixql`, and `n` (its `nerdctl` is not in apt) are not
-covered.
+full dependency list, so each mode takes several minutes and needs network
+access.
+
+The `brew` mode installs Homebrew in the container first, so `install.sh` takes
+its Homebrew branch as it does on a Mac. Homebrew's fish is not in
+`/etc/shells`, so adding it there is exercised too. Formulae that only exist
+for macOS (`mactop`) are skipped, and the functions only run in `apt` mode,
+since they are the same in both. Not covered: what only a real Mac has — `dscl`,
+macOS `chsh` and the `fixql` function — and `n`, whose `nerdctl` `install.sh`
+does not install.
 
 ## Project Structure
 
