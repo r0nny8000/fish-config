@@ -91,7 +91,7 @@ fish_variables       # Fish universal variables (gitignored)
 - **Tool configuration lives in `conf.d/<tool>.fish`**: PATH entries,
   environment variables and init lines, one file per tool and tracked in git,
   so a new machine gets them. fish loads these before `config.fish`.
-  `conf.d/zoxide.fish` is an example.
+  `conf.d/zoxide.fish` and `conf.d/fzf.fish` are examples.
 - **Secrets live in `config.local.fish`**, which is gitignored. No tokens or
   credentials are committed.
 - **Short alias functions** in `functions/`: most are single-letter wrappers
@@ -128,7 +128,11 @@ belongs in `conf.d/` instead.
 | `v`      | `nvim` | Neovim shortcut |
 | `wifi`   | `bandwhich` | Per-process Wi-Fi bandwidth |
 | `z`      | `zoxide`, set up in `conf.d/zoxide.fish` | Jump to a directory by keyword or path, ranked by how often and how recently you visited it |
-| `zi`     | `zoxide` + `fzf` | Pick a directory interactively; needs `fzf`, which `install.sh` does not install |
+| `zi`     | `zoxide` + `fzf` | Pick a directory interactively with `fzf` |
+
+`conf.d/fzf.fish` also turns on fzf's key bindings: Ctrl-R searches history,
+Ctrl-T pastes files and directories onto the command line, and Alt-C changes
+into a directory. They replace fish's own bindings for those keys.
 
 ## Dependencies
 
@@ -155,6 +159,7 @@ function that uses it stops working.
 | `vcgencmd` | `cpu --temp` | — | `sudo apt install raspi-utils-core` |
 | `bandwhich` | `wifi` | `brew install bandwhich` | release download, see below |
 | `zoxide` | `z`, `zi` | `brew install zoxide` | release download, see below |
+| `fzf` | `zi`, Ctrl-R, Ctrl-T, Alt-C | `brew install fzf` | `sudo apt install fzf` |
 | `claude` | `cc` | https://claude.com/claude-code | https://claude.com/claude-code |
 | `caffeinate` | `cc` | built in | `systemd-inhibit`, part of systemd |
 | `hostname` | `fish_prompt` | built in | `sudo apt install hostname` |

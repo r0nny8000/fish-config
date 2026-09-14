@@ -106,6 +106,7 @@ nvim                    neovim      neovim              -
 tree                    tree        tree                -
 lsd                     lsd         lsd                 -
 glow                    glow        glow                -
+fzf                     fzf         fzf                 -
 hostname                -           hostname            -
 python                  -           python-is-python3   https://github.com/pyenv/pyenv
 mactop|btop             mactop      btop                -

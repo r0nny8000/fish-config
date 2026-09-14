@@ -108,6 +108,11 @@ outputs() {
     out=$("$@" 2>&1) && [[ $out == *"$pattern"* ]]
 }
 
+# True when version $2 is at least $1.
+at_least() {
+    [ "$(printf '%s\n' "$1" "$2" | sort -V | head -1)" = "$1" ]
+}
+
 exits_with() {
     local code=$1
     shift
@@ -166,6 +171,7 @@ check "no tool reported twice as skipped" \
 check "fish starts without errors" test -z "$(fish -c true 2>&1)"
 check "fish is listed in /etc/shells" grep -qxF "$(command -v fish)" /etc/shells
 check "fish is the login shell" test "$(getent passwd "$USER" | cut -d: -f7)" = "$(command -v fish)"
+check "fzf is at least 0.51.0, which zi needs" at_least 0.51.0 "$(fzf --version | cut -d' ' -f1)"
 
 # Each function once, with the tool install.sh put there. The functions are
 # the same in both modes, so they only run in apt mode. Left out: n, whose
@@ -188,6 +194,8 @@ if [ "$MODE" = apt ]; then
     check "wifi --help runs" outputs "Usage: wifi" fish -c 'wifi --help'
     check "bandwhich runs" outputs bandwhich bandwhich --version
     check "z jumps to a directory by keyword" outputs /usr/share fish -c 'cd /usr/share; cd /; z share; pwd'
+    # Key bindings only exist in an interactive shell, which script provides.
+    check "Ctrl-R opens fzf's history search" outputs fzf-history-widget script -qec "fish -i -c 'bind ctrl-r'" /dev/null
 fi
 
 check "second run exits 0" exits_with 0 bash -c "'$repo/install.sh' --yes > /tmp/run2.log 2>&1"
