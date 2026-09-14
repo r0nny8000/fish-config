@@ -68,7 +68,9 @@ The `brew` mode installs Homebrew in the container first, so `install.sh` takes
 its Homebrew branch as it does on a Mac. Homebrew's fish is not in
 `/etc/shells`, so adding it there is exercised too. Formulae that only exist
 for macOS (`mactop`) are skipped, and the functions only run in `apt` mode,
-since they are the same in both. Not covered: what only a real Mac has — `dscl`,
+since they are the same in both. The lookup of the current login shell is the
+same `perl` line on both systems, so the test runs the code a Mac runs, though
+not against macOS's own user directory. Not covered: what only a real Mac has —
 macOS `chsh` and the `fixql` function — and `n`, whose `nerdctl` `install.sh`
 does not install.
 
@@ -187,4 +189,5 @@ about this step.
 ### macOS-only functions
 
 `fixql` targets `/Applications/QLMarkdown.app` and uses `xattr` and `qlmanage`.
-It is the only function with no Linux equivalent.
+It is the only function with no Linux equivalent. The container test runs on
+Linux, so it cannot run `fixql`: check it by hand on a Mac after changing it.

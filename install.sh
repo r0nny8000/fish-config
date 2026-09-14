@@ -95,7 +95,7 @@ fi
 # and the binary named like the probe is extracted from it into /usr/local/bin
 # ({arch} stands for uname -m); any other URL is reported for a manual install.
 # Tools that are part of the base system on both platforms
-# (awk, sed, grep, find, sort, cat, caffeinate, systemd-inhibit, xattr,
+# (awk, sed, grep, find, sort, cat, perl, caffeinate, systemd-inhibit, xattr,
 # qlmanage) are deliberately absent.
 
 TOOLS='
@@ -248,14 +248,12 @@ fi
 # a versioned Cellar directory that changes with every fish upgrade.
 echo "fish is installed here: $fish_path"
 
-# getent is Linux-only, and a missing one still leaves the pipeline exiting 0,
-# so pick the tool up front instead of chaining fallbacks.
+# getpwnam asks the system's user database, /etc/passwd on Linux and Directory
+# Services on macOS, so the same line works on both. perl ships with macOS and
+# is essential on Debian.
 user=${USER:-$(id -un)}
-if command -v getent >/dev/null 2>&1; then
-    current_shell=$(getent passwd "$user" | cut -d: -f7 || true)
-else
-    current_shell=$(dscl . -read "/Users/$user" UserShell 2>/dev/null | awk '{print $2}' || true)
-fi
+# shellcheck disable=SC2016
+current_shell=$(perl -e 'print((getpwnam($ARGV[0]))[8])' "$user" || true)
 
 if [ "$current_shell" = "$fish_path" ]; then
     echo "Already your login shell."
