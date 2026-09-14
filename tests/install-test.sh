@@ -2,7 +2,8 @@
 #
 # Runs install.sh for real inside a fresh container and checks the result:
 # symlink and backup, config.local.fish, every apt-installable tool from the
-# TOOLS table, fish startup, and an idempotent second run.
+# TOOLS table (fish included), each function run once with its real tool, and
+# an idempotent second run.
 #
 #   tests/install-test.sh [image]    # default: debian:13
 #
@@ -30,7 +31,7 @@ fi
 
 if [ "$STAGE" = root ]; then
     export DEBIAN_FRONTEND=noninteractive
-    apt-get update -qq && apt-get install -y -qq sudo fish >/dev/null || exit 1
+    apt-get update -qq && apt-get install -y -qq sudo >/dev/null || exit 1
     useradd -m tester
     echo 'tester ALL=(ALL) NOPASSWD:ALL' > /etc/sudoers.d/tester
     cp -r /src /home/tester/fish-config
@@ -66,6 +67,12 @@ have() {
     return 1
 }
 
+outputs() {
+    local pattern=$1 out
+    shift
+    out=$("$@" 2>&1) && [[ $out == *"$pattern"* ]]
+}
+
 exits_with() {
     local code=$1
     shift
@@ -99,7 +106,24 @@ done < <(sed -n "/^TOOLS='/,/^'/p" "$repo/install.sh" | sed '1d;$d')
 check "no tool reported twice as skipped" \
     bash -c "grep '^Not applicable' /tmp/run1.log | cut -d: -f2 | tr ' ' '\n' | grep . | sort | uniq -d | grep -q . && exit 1 || exit 0"
 check "fish starts without errors" test -z "$(fish -c true 2>&1)"
+
+# Each function once, with the tool install.sh put there. Left out: n, whose
+# nerdctl is not installable from apt, and fixql, which is macOS only.
+check "c shows a file" outputs TOOLS fish -c "c '$repo/install.sh'"
+check "c renders markdown" outputs Installation fish -c "c '$repo/README.md'"
+check "cc --help runs" outputs "Usage: cc" fish -c 'cc --help'
+check "cpu picks btop" outputs "Runs: btop" fish -c 'cpu --help'
+check "fish_prompt runs" outputs "$USER" fish -c fish_prompt
+check "g runs git status" fish -c "cd '$repo'; g"
+check "gl runs git log" fish -c "cd '$repo'; gl -1"
+check "gr runs git in each repo" outputs fish-config fish -c "cd; gr status"
+check "json formats JSON" outputs '"a": 1' fish -c "echo '{\"a\":1}' | json"
+check "l runs" fish -c 'l /'
 check "ll runs" fish -c 'll /'
+check "sha256sum hashes a file" outputs install.sh fish -c "sha256sum '$repo/install.sh'"
+check "t runs" fish -c 't -L 1 /'
+check "v starts neovim" outputs NVIM fish -c 'v --version'
+check "wifi --help runs" outputs "Usage: wifi" fish -c 'wifi --help'
 
 check "second run exits 0" exits_with 0 bash -c "'$repo/install.sh' --yes > /tmp/run2.log 2>&1"
 check "second run keeps the symlink" grep -q "Symlink already points here" /tmp/run2.log

@@ -79,6 +79,7 @@ fi
 # qlmanage) are deliberately absent.
 
 TOOLS='
+fish                    fish        fish                -
 git                     git         git                 -
 nvim                    neovim      neovim              -
 tree                    tree        tree                -

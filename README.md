@@ -1,10 +1,27 @@
 # my fish-config
 
-Personal fish shell configuration, deployed by symlinking this repo to
-`~/.config/fish`. It sets a Dracula colour theme, the default key bindings and
-`EDITOR=vim`, and adds a set of short alias functions.
+Personal fish shell configuration. Its goal is to turn a new Linux machine — or
+a Mac — into a working fish environment with all the tools needed for work, by
+cloning this repo and running one script. New tools, functions and per-tool
+configuration are added here, so every machine gets them.
+
+`install.sh` installs fish and the tools, and symlinks this repo to
+`~/.config/fish`. The config sets a TokyoNight colour theme and the default key
+bindings, and adds a set of short alias functions.
 
 ## Installation
+
+On a new machine, get git and clone the repo where it will stay — the symlink
+points at the clone:
+
+```sh
+sudo apt install git        # macOS: install Homebrew first, https://brew.sh
+git clone https://github.com/r0nny8000/fish-config.git ~/code/fish-config
+cd ~/code/fish-config
+./install.sh --yes
+```
+
+Options:
 
 ```sh
 ./install.sh                # prompts before installing missing tools
@@ -14,8 +31,8 @@ Personal fish shell configuration, deployed by symlinking this repo to
 
 `install.sh` is idempotent: re-running it completes whatever is missing rather
 than redoing work. It backs up an existing `~/.config/fish` before symlinking,
-respects `XDG_CONFIG_HOME`, installs only the dependencies that are not already
-present, and prints the remaining manual steps — adding fish to `/etc/shells`
+respects `XDG_CONFIG_HOME`, installs fish and whichever dependencies are not
+already present, and prints the remaining manual steps — adding fish to `/etc/shells`
 and `chsh` — with the fish path detected on that machine, skipping whichever
 step is already done.
 
@@ -33,28 +50,33 @@ tests/install-test.sh ubuntu:24.04    # any apt-based image
 Runs `install.sh` for real inside a fresh container, as a normal user with
 sudo, and checks the result: the symlink and the backup of an existing config,
 `config.local.fish`, that every tool from the `TOOLS` table with an apt package
-is on `PATH` afterwards, that fish starts cleanly, and that a second run changes
-nothing. Each check prints `ok` or `FAIL`; on failure both install logs follow.
+— fish included — is on `PATH` afterwards, that fish starts cleanly, that each
+function runs with its real tool, and that a second run changes nothing. Each
+check prints `ok` or `FAIL`; on failure both install logs follow.
 
 Needs podman or docker (`sudo apt install podman` runs rootless). It installs the
 full dependency list, so a run takes several minutes and needs network access.
-Homebrew and the macOS-only tools are not covered.
+Homebrew, the macOS-only `fixql`, and `n` (its `nerdctl` is not in apt) are not
+covered.
 
 ## Project Structure
 
 ```
-config.fish          # Main config: Dracula color theme, default key bindings, EDITOR=vim
-config.local.fish    # Machine-local config (gitignored) - secrets, PATH, toolchain setup
-install.sh           # Symlinks this repo to ~/.config/fish, prints post-install steps
+config.fish          # Main config: TokyoNight colour theme, default key bindings
+config.local.fish    # Secrets and machine-specific values (gitignored, created by install.sh)
+conf.d/              # Per-tool configuration, one file per tool (auto-loaded)
+functions/           # One fish function per file (auto-loaded)
+install.sh           # Installs fish and the tools, symlinks this repo to ~/.config/fish
 tests/               # install-test.sh: runs install.sh for real in a container
-functions/           # Fish function files (auto-loaded by fish)
-completions/         # Fish completions (currently empty)
-conf.d/              # Auto-loaded conf snippets (currently empty)
 fish_variables       # Fish universal variables (gitignored)
 ```
 
 ## Conventions
 
+- **Tool configuration lives in `conf.d/<tool>.fish`**: PATH entries,
+  environment variables and init lines, one file per tool and tracked in git,
+  so a new machine gets them. fish loads these before `config.fish`. There are
+  no snippets yet; the directory appears with the first one.
 - **Secrets live in `config.local.fish`**, which is gitignored. No tokens or
   credentials are committed.
 - **Short alias functions** in `functions/`: most are single-letter wrappers
@@ -66,9 +88,10 @@ fish_variables       # Fish universal variables (gitignored)
 
 ## Local Environment (config.local.fish)
 
-Machine-local and not tracked in git. It sets up locale, Homebrew, pyenv,
-Java/Maven/Groovy, compiler flags (`LDFLAGS`/`CFLAGS`/`CPPFLAGS`), and tokens
-for GitHub/JFrog/Jira.
+Not tracked in git; `config.fish` sources it and `install.sh` creates it empty.
+Keep it to what must not or cannot be shared: tokens, credentials, and values
+that really differ between machines. Anything a new machine should also get
+belongs in `conf.d/` instead.
 
 ## Function Aliases
 
@@ -94,11 +117,12 @@ for GitHub/JFrog/Jira.
 
 `./install.sh` installs everything in this table that Homebrew or apt can
 supply, skipping whatever is already present, and reports the rest as manual
-steps. Nothing breaks if a tool is missing — only the function that uses it
-stops working.
+steps. Apart from fish itself, nothing breaks if a tool is missing — only the
+function that uses it stops working.
 
 | Tool | Used by | macOS | Linux (Debian / Raspberry Pi OS) |
 |------|---------|-------|----------------------------------|
+| `fish` | the shell itself | `brew install fish` | `sudo apt install fish` |
 | `git` | `g`, `gl`, `gr` | preinstalled | `sudo apt install git` |
 | `python` | `json` | preinstalled | `sudo apt install python-is-python3` |
 | `nvim` | `v` | `brew install neovim` | `sudo apt install neovim` |
