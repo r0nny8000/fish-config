@@ -1,4 +1,4 @@
 function t --description 'Tree shortcut'
     echo ""
-    tree $argv
+    tree -C $argv
 end
