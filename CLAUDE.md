@@ -14,7 +14,9 @@ instructions, no project description.
 - New function: `functions/<name>.fish` and a row in the Function Aliases table
   in `README.md`.
 - Tool configuration (PATH, environment variables, init lines):
-  `conf.d/<tool>.fish`, tracked in git so every machine gets it.
+  `conf.d/<tool>.fish`, tracked in git so every machine gets it. Commands a
+  tool's own init defines, like zoxide's `z`, still get a row in the Function
+  Aliases table.
 - Secrets and machine-specific values: `config.local.fish` only, which is
   gitignored. Never commit tokens or credentials.
 

@@ -187,6 +187,7 @@ if [ "$MODE" = apt ]; then
     check "v starts neovim" outputs NVIM fish -c 'v --version'
     check "wifi --help runs" outputs "Usage: wifi" fish -c 'wifi --help'
     check "bandwhich runs" outputs bandwhich bandwhich --version
+    check "z jumps to a directory by keyword" outputs /usr/share fish -c 'cd /usr/share; cd /; z share; pwd'
 fi
 
 check "second run exits 0" exits_with 0 bash -c "'$repo/install.sh' --yes > /tmp/run2.log 2>&1"

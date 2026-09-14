@@ -113,6 +113,7 @@ gsha256sum|sha256sum    coreutils   -                   -
 bat|batcat              bat         bat                 -
 nerdctl                 -           -                   https://github.com/containerd/nerdctl/releases
 bandwhich               bandwhich   -                   https://github.com/imsnif/bandwhich/releases/download/v0.23.1/bandwhich-v0.23.1-{arch}-unknown-linux-gnu.tar.gz
+zoxide                  zoxide      -                   https://github.com/ajeetdsouza/zoxide/releases/download/v0.10.0/zoxide-0.10.0-{arch}-unknown-linux-musl.tar.gz
 vcgencmd                -           raspi-utils-core    -
 claude                  -           -                   https://claude.com/claude-code
 '

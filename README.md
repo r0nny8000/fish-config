@@ -90,8 +90,8 @@ fish_variables       # Fish universal variables (gitignored)
 
 - **Tool configuration lives in `conf.d/<tool>.fish`**: PATH entries,
   environment variables and init lines, one file per tool and tracked in git,
-  so a new machine gets them. fish loads these before `config.fish`. There are
-  no snippets yet; the directory appears with the first one.
+  so a new machine gets them. fish loads these before `config.fish`.
+  `conf.d/zoxide.fish` is an example.
 - **Secrets live in `config.local.fish`**, which is gitignored. No tokens or
   credentials are committed.
 - **Short alias functions** in `functions/`: most are single-letter wrappers
@@ -127,6 +127,8 @@ belongs in `conf.d/` instead.
 | `t`      | `tree` | Tree shortcut |
 | `v`      | `nvim` | Neovim shortcut |
 | `wifi`   | `bandwhich` | Per-process Wi-Fi bandwidth |
+| `z`      | `zoxide`, set up in `conf.d/zoxide.fish` | Jump to a directory by keyword or path, ranked by how often and how recently you visited it |
+| `zi`     | `zoxide` + `fzf` | Pick a directory interactively; needs `fzf`, which `install.sh` does not install |
 
 ## Dependencies
 
@@ -152,6 +154,7 @@ function that uses it stops working.
 | `mactop` | `cpu` | `brew install mactop` | — (Apple Silicon only) |
 | `vcgencmd` | `cpu --temp` | — | `sudo apt install raspi-utils-core` |
 | `bandwhich` | `wifi` | `brew install bandwhich` | release download, see below |
+| `zoxide` | `z`, `zi` | `brew install zoxide` | release download, see below |
 | `claude` | `cc` | https://claude.com/claude-code | https://claude.com/claude-code |
 | `caffeinate` | `cc` | built in | `systemd-inhibit`, part of systemd |
 | `hostname` | `fish_prompt` | built in | `sudo apt install hostname` |
@@ -164,6 +167,10 @@ table, so `install.sh` does not install it.
 `bandwhich` publishes prebuilt Linux binaries, so `install.sh` downloads the
 release for the machine's architecture into `/usr/local/bin`. Bump the version
 in its `TOOLS` row as new releases appear.
+
+`zoxide` is packaged for Debian, but its developer recommends the prebuilt
+release over distribution packages, which lag behind, so `install.sh` downloads
+it the same way.
 
 `nerdctl` is reported rather than installed: on its own the binary does
 nothing, it needs containerd running and a rootless setup. Releases are at
