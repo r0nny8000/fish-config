@@ -1,4 +1,4 @@
-function g
-  echo ""
-  git status $argv
+function g --description 'Git status shortcut'
+    echo ""
+    git status $argv
 end

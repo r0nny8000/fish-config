@@ -1,4 +1,4 @@
-function n
-	echo ""
-	nerdctl $argv
+function n --description 'Container runtime shortcut'
+    echo ""
+    nerdctl $argv
 end

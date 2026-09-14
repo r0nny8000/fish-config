@@ -1,9 +1,9 @@
-function gr
+function gr --description 'Run a git command across all repos in subdirectories'
     set -l start_dir (pwd)
     for PROJECT in (find . -name '.git' -type d | sed 's/\/.git//' | sort)
         cd $start_dir/$PROJECT
         set PROJECTNAME (echo $PROJECT | sed 's/\.\///')
-		set PREFIX (printf "\033[0;35m%-32s\033[0m" $PROJECTNAME)
+        set PREFIX (printf "\033[0;35m%-32s\033[0m" $PROJECTNAME)
         git $argv | sed "s/^/$PREFIX/"
         printf "\n\n"
     end

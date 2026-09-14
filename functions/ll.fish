@@ -1,4 +1,4 @@
-function ll
-  echo ""
-  lsd -la $argv
+function ll --description 'Long listing with lsd'
+    echo ""
+    lsd -la $argv
 end

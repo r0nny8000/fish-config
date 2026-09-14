@@ -1,5 +1,5 @@
-function wifi
-    argparse --ignore-unknown 'h/help' -- $argv
+function wifi --description 'Per-process Wi-Fi bandwidth'
+    argparse --ignore-unknown h/help -- $argv
     or return
 
     # Wi-Fi interface name differs per OS: wlan0-style on Linux, en0 on macOS.
@@ -26,7 +26,7 @@ function wifi
         echo "Monitor Wi-Fi bandwidth with bandwhich (processes only)."
         echo "Runs: sudo bandwhich -p -i $shown -u si-bits"
         echo ""
-        printf "  %-11s%s\n" "-p" "Processes table only"
+        printf "  %-11s%s\n" -p "Processes table only"
         printf "  %-11s%s\n" "-i $shown" "Wi-Fi interface only (detected automatically)"
         printf "  %-11s%s\n" "-u si-bits" "Units in Mbit (decimal) — matches ISP line speed"
         echo ""

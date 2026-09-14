@@ -1,4 +1,4 @@
-function l
-  echo ""
-  lsd $argv
+function l --description 'List files with lsd'
+    echo ""
+    lsd $argv
 end

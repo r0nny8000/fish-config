@@ -1,3 +1,3 @@
-function v
-	nvim $argv
+function v --description 'Neovim shortcut'
+    nvim $argv
 end

@@ -1,5 +1,5 @@
-function cpu
-    argparse --ignore-unknown 'h/help' 'temp' -- $argv
+function cpu --description 'System monitor; --temp prints temperature, frequency and throttling'
+    argparse --ignore-unknown h/help temp -- $argv
     or return
 
     # mactop only exists on Apple Silicon; btop is the closest equivalent
@@ -80,7 +80,7 @@ function __cpu_temp --description 'CPU temperature, frequency and throttling sta
     end
 
     set -l bits (math (string replace 'throttled=' '' -- $raw))
-    set -l flags "under-voltage" "frequency capped" "throttled" "soft temp limit"
+    set -l flags under-voltage "frequency capped" throttled "soft temp limit"
 
     set -l now
     set -l past

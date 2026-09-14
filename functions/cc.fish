@@ -1,5 +1,5 @@
-function cc
-    argparse 'a/auto' 'r/resume=?' 'C/no-caffeinate' 'h/help' -- $argv
+function cc --description 'Claude CLI, keeps the machine awake during sessions'
+    argparse a/auto 'r/resume=?' C/no-caffeinate h/help -- $argv
     or return
 
     # caffeinate is macOS-only; systemd-inhibit is the Linux equivalent.

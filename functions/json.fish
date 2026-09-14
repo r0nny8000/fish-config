@@ -1,3 +1,3 @@
-function json
-  python -m json.tool $argv
+function json --description 'Format JSON'
+    python -m json.tool $argv
 end
