@@ -23,12 +23,30 @@ The dependency list lives in the `TOOLS` table inside `install.sh`, one row per
 tool: the command to probe for (alternatives separated by `|`), the Homebrew
 formula, the apt package, and a URL for tools neither manager supplies.
 
+## Testing
+
+```sh
+tests/install-test.sh                 # debian:13
+tests/install-test.sh ubuntu:24.04    # any apt-based image
+```
+
+Runs `install.sh` for real inside a fresh container, as a normal user with
+sudo, and checks the result: the symlink and the backup of an existing config,
+`config.local.fish`, that every tool from the `TOOLS` table with an apt package
+is on `PATH` afterwards, that fish starts cleanly, and that a second run changes
+nothing. Each check prints `ok` or `FAIL`; on failure both install logs follow.
+
+Needs podman or docker (`sudo apt install podman` runs rootless). It installs the
+full dependency list, so a run takes several minutes and needs network access.
+Homebrew and the macOS-only tools are not covered.
+
 ## Project Structure
 
 ```
 config.fish          # Main config: Dracula color theme, default key bindings, EDITOR=vim
 config.local.fish    # Machine-local config (gitignored) - secrets, PATH, toolchain setup
 install.sh           # Symlinks this repo to ~/.config/fish, prints post-install steps
+tests/               # install-test.sh: runs install.sh for real in a container
 functions/           # Fish function files (auto-loaded by fish)
 completions/         # Fish completions (currently empty)
 conf.d/              # Auto-loaded conf snippets (currently empty)
@@ -97,6 +115,9 @@ stops working.
 | `claude` | `cc` | https://claude.com/claude-code | https://claude.com/claude-code |
 | `caffeinate` | `cc` | built in | `systemd-inhibit`, part of systemd |
 | `hostname` | `fish_prompt` | built in | `sudo apt install hostname` |
+
+`tests/install-test.sh` also needs podman or docker. It is not in the `TOOLS`
+table, so `install.sh` does not install it.
 
 ### Tools not in the Debian repositories
 
