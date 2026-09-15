@@ -185,6 +185,12 @@ if [ "$MODE" = apt ]; then
     check "g runs git status" fish -c "cd '$repo'; g"
     check "gl runs git log" fish -c "cd '$repo'; gl -1"
     check "gr runs git in each repo" outputs fish-config fish -c "cd; gr status"
+    # A repo more than one directory down carries a / in its label, which used
+    # to cut sed's replacement short and turned every line into a sed error.
+    mkdir -p "$HOME/nested/group/repo" "$HOME/nested/plain"
+    git -C "$HOME/nested/group/repo" init -q
+    check "gr labels a repo two levels down" outputs group/repo fish -c "cd '$HOME/nested'; gr status"
+    check "gr reports a directory without a repo" outputs "no git repository" fish -c "cd '$HOME/nested/plain'; gr status"
     check "json formats JSON" outputs '"a": 1' fish -c "echo '{\"a\":1}' | json"
     check "l runs" fish -c 'l /'
     check "ll runs" fish -c 'll /'

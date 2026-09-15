@@ -141,28 +141,29 @@ supply, skipping whatever is already present, and reports the rest as manual
 steps. Apart from fish itself, nothing breaks if a tool is missing — only the
 function that uses it stops working.
 
-| Tool | Used by | macOS | Linux (Debian / Raspberry Pi OS) |
-|------|---------|-------|----------------------------------|
-| `fish` | the shell itself | `brew install fish` | `sudo apt install fish` |
-| `curl` | `install.sh`, for release downloads | built in | `sudo apt install curl` |
-| `git` | `g`, `gl`, `gr` | preinstalled | `sudo apt install git` |
-| `python` | `json` | preinstalled | `sudo apt install python-is-python3` |
-| `nvim` | `v` | `brew install neovim` | `sudo apt install neovim` |
-| `tree` | `t` | `brew install tree` | `sudo apt install tree` |
-| `lsd` | `l`, `ll` | `brew install lsd` | `sudo apt install lsd` |
-| `glow` | `c` | `brew install glow` | `sudo apt install glow` |
-| `bat` | `c` | `brew install bat` | `sudo apt install bat` — installed as `batcat` |
-| `nerdctl` | `n` | — (Homebrew's formula is Linux only) | see below |
-| coreutils | `sha256sum` | `brew install coreutils` | built in |
-| `btop` | `cpu` | — (uses `mactop`) | `sudo apt install btop` |
-| `mactop` | `cpu` | `brew install mactop` | — (Apple Silicon only) |
-| `vcgencmd` | `cpu --temp` | — | `sudo apt install raspi-utils-core` |
-| `bandwhich` | `wifi` | `brew install bandwhich` | release download, see below |
-| `zoxide` | `z`, `zi` | `brew install zoxide` | release download, see below |
-| `fzf` | `zi`, Ctrl-R, Ctrl-T, Alt-C | `brew install fzf` | `sudo apt install fzf` |
-| `claude` | `cc` | https://claude.com/claude-code | https://claude.com/claude-code |
-| `caffeinate` | `cc` | built in | `systemd-inhibit`, part of systemd |
-| `hostname` | `fish_prompt` | built in | `sudo apt install hostname` |
+| Tool         | Used by                             | macOS                                | Linux (Debian / Raspberry Pi OS)               |
+|--------------|-------------------------------------|--------------------------------------|------------------------------------------------|
+| `fish`       | the shell itself                    | `brew install fish`                  | `sudo apt install fish`                        |
+| `curl`       | `install.sh`, for release downloads | built in                             | `sudo apt install curl`                        |
+| `git`        | `g`, `gl`, `gr`                     | preinstalled                         | `sudo apt install git`                         |
+| `tig`        | standalone git browser              | `brew install tig`                   | `sudo apt install tig`                         |
+| `python`     | `json`                              | preinstalled                         | `sudo apt install python-is-python3`           |
+| `nvim`       | `v`                                 | `brew install neovim`                | `sudo apt install neovim`                      |
+| `tree`       | `t`                                 | `brew install tree`                  | `sudo apt install tree`                        |
+| `lsd`        | `l`, `ll`                           | `brew install lsd`                   | `sudo apt install lsd`                         |
+| `glow`       | `c`                                 | `brew install glow`                  | `sudo apt install glow`                        |
+| `bat`        | `c`                                 | `brew install bat`                   | `sudo apt install bat` — installed as `batcat` |
+| `nerdctl`    | `n`                                 | — (Homebrew's formula is Linux only) | see below                                      |
+| coreutils    | `sha256sum`                         | `brew install coreutils`             | built in                                       |
+| `btop`       | `cpu`                               | — (uses `mactop`)                    | `sudo apt install btop`                        |
+| `mactop`     | `cpu`                               | `brew install mactop`                | — (Apple Silicon only)                         |
+| `vcgencmd`   | `cpu --temp`                        | —                                    | `sudo apt install raspi-utils-core`            |
+| `bandwhich`  | `wifi`                              | `brew install bandwhich`             | release download, see below                    |
+| `zoxide`     | `z`, `zi`                           | `brew install zoxide`                | release download, see below                    |
+| `fzf`        | `zi`, Ctrl-R, Ctrl-T, Alt-C         | `brew install fzf`                   | `sudo apt install fzf`                         |
+| `claude`     | `cc`                                | https://claude.com/claude-code       | https://claude.com/claude-code                 |
+| `caffeinate` | `cc`                                | built in                             | `systemd-inhibit`, part of systemd             |
+| `hostname`   | `fish_prompt`                       | built in                             | `sudo apt install hostname`                    |
 
 `tests/install-test.sh` also needs podman or docker. It is not in the `TOOLS`
 table, so `install.sh` does not install it.

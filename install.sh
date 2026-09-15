@@ -102,6 +102,7 @@ TOOLS='
 fish                    fish        fish                -
 curl                    -           curl                -
 git                     git         git                 -
+tig                     tig         tig                 -
 nvim                    neovim      neovim              -
 tree                    tree        tree                -
 lsd                     lsd         lsd                 -
