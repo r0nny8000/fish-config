@@ -195,7 +195,8 @@ if [ "$MODE" = apt ]; then
     check "l runs" fish -c 'l /'
     check "ll runs" fish -c 'll /'
     check "sha256sum hashes a file" outputs install.sh fish -c "sha256sum '$repo/install.sh'"
-    check "t colours output into a pipe" outputs $'\e[' fish -c 't -L 1 /'
+    # tree -C needs a TERM to colour with; the container has none.
+    check "t colours output into a pipe" outputs $'\e[' env TERM=xterm fish -c 't -L 1 /'
     check "v starts neovim" outputs NVIM fish -c 'v --version'
     check "wifi --help runs" outputs "Usage: wifi" fish -c 'wifi --help'
     check "bandwhich runs" outputs bandwhich bandwhich --version
